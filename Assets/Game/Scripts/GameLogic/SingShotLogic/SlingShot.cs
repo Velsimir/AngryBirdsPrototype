@@ -8,7 +8,7 @@ namespace Game.Scripts.GameLogic.SingShotLogic
     public class SlingShot : MonoBehaviour
     {
         [SerializeField] private SlingShotArea  _slingShotArea;
-        [SerializeField] private RubberBandDrawer _rubberBandDrawer;
+        [SerializeField] private RubberBand _rubberBand;
         [SerializeField] private Transform _leftBranchPosition;
         [SerializeField] private Transform _rightBranchPosition;
         [SerializeField] private Transform _centerOfSingleShotPosition;        
@@ -20,8 +20,10 @@ namespace Game.Scripts.GameLogic.SingShotLogic
         public void Initialize(InputSystemAction inputSystemAction, ISpawnerService<IBird>  spawnerService)
         {
             _slingShotArea.Initialize(inputSystemAction);
-            _rubberBandDrawer.Initialize(_leftBranchPosition, _rightBranchPosition, _centerOfSingleShotPosition);
+            _rubberBand.Initialize(_leftBranchPosition, _rightBranchPosition, _centerOfSingleShotPosition);
             _spawnerService = spawnerService;
+            IBird bird = _spawnerService.SpawnAs<IBird>(_centerOfSingleShotPosition);
+            _rubberBand.SetNewBird(bird);
         }
     }
 }
