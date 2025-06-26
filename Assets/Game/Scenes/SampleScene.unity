@@ -210,8 +210,8 @@ MonoBehaviour:
   _lineRendererRight: {fileID: 1690093091}
   _maxRubberBandLenght: 7
   _slingShotArea: {fileID: 361207083}
-  _birdOffsetX: 0.6
-  _birdOffsetY: 0.6
+  _birdOffsetX: 0.5
+  _birdOffsetY: 0.5
 --- !u!114 &361207083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +280,8 @@ MonoBehaviour:
   _rightBranchPosition: {fileID: 1729470819}
   _centerOfSingleShotPosition: {fileID: 587789938}
   _idlePosition: {fileID: 182346202}
+  _spawnBirdDelay: 3
+  _maxShots: 3
 --- !u!1 &491238144
 GameObject:
   m_ObjectHideFlags: 0

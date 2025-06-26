@@ -10,6 +10,11 @@ namespace Game.Scripts.GameLogic.BirdsLogic
     public class Bird : MonoBehaviour, IBird
     {
         private CircleCollider2D _collider;
+        private bool _hasBeenLaunched = false;
+        private bool _isHitSomething = false;
+        
+        public event Action Launched;
+        
         public Rigidbody2D Rigidbody2D { get; private set; }
         public MonoBehaviour MonoBehaviour => this;
         public event Action<ISpawnable> Disappeared;
@@ -26,12 +31,27 @@ namespace Game.Scripts.GameLogic.BirdsLogic
             _collider.enabled = false;
         }
 
+        private void FixedUpdate()
+        {
+            if (_hasBeenLaunched && _isHitSomething == false)
+                transform.right = Rigidbody2D.velocity;
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            _isHitSomething = true;
+        }
+
         public void Launch(Vector3 direction, float force)
         {
             Rigidbody2D.isKinematic = false;
+            _isHitSomething = false;
             _collider.enabled = true;
+            _hasBeenLaunched = true;
             
             Rigidbody2D.AddForce(direction * force, ForceMode2D.Impulse);
+            
+            Launched?.Invoke();
         }
 
         public void Disappear()

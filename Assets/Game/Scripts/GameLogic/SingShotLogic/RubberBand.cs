@@ -18,6 +18,7 @@ namespace Game.Scripts.GameLogic.SingShotLogic
         private Transform _centerOfSingleShotPosition;
         
         private Vector2 _rubberBandLinesPosition;
+        private Vector3 _direction;
         private bool _isClickedWithinArea;
 
         private IBird _currentBird;
@@ -59,14 +60,17 @@ namespace Game.Scripts.GameLogic.SingShotLogic
 
         private void Activate()
         {
-            _isClickedWithinArea =  true;
+            _isClickedWithinArea = true;
         }
 
         private void Deactivate()
         {
+            if (_isClickedWithinArea == false)
+                return;
+            
+            _currentBird.Launch(_direction, 10f);
             _isClickedWithinArea = false;
             DrawLinesToPoint(_centerOfSingleShotPosition.position);
-            ResetBirdPosition();
         }
 
         private void DrawRubberLines()
@@ -77,6 +81,7 @@ namespace Game.Scripts.GameLogic.SingShotLogic
                 _centerOfSingleShotPosition.position + Vector3.ClampMagnitude(mousePosition - _centerOfSingleShotPosition.position, _maxRubberBandLenght);
             
             DrawLinesToPoint(_rubberBandLinesPosition);
+            _direction = _centerOfSingleShotPosition.position - _currentBird.MonoBehaviour.transform.position;
         }
 
         private void DrawLinesToPoint(Vector2 mousePosition)
@@ -94,6 +99,7 @@ namespace Game.Scripts.GameLogic.SingShotLogic
                 return;
             
             _currentBird.MonoBehaviour.transform.position = _rubberBandLinesPosition + Vector2.right * _birdOffsetX + Vector2.up * _birdOffsetY;
+            _currentBird.MonoBehaviour.transform.right = _centerOfSingleShotPosition.position - _currentBird.MonoBehaviour.transform.position;
         }
 
         private void ResetBirdPosition()
