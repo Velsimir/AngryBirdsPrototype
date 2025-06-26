@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Scripts.Extention
+namespace Game.Scripts.Extension
 {
     public class RequireInterfaceAttribute : PropertyAttribute
     {

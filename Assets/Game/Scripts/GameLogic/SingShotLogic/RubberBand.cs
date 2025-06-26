@@ -1,3 +1,4 @@
+using System;
 using Game.Scripts.GameLogic.BirdsLogic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -30,6 +31,8 @@ namespace Game.Scripts.GameLogic.SingShotLogic
             _centerOfSingleShotPosition = centerOfSingleShotPosition;
             DrawLinesToPoint(_centerOfSingleShotPosition.position);
         }
+
+        public event Action BirdLaunched; 
 
         private void OnEnable()
         {
@@ -69,6 +72,7 @@ namespace Game.Scripts.GameLogic.SingShotLogic
                 return;
             
             _currentBird.Launch(_direction, 10f);
+            BirdLaunched?.Invoke();
             _isClickedWithinArea = false;
             DrawLinesToPoint(_centerOfSingleShotPosition.position);
         }

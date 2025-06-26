@@ -13,11 +13,10 @@ namespace Game.Scripts.GameLogic.BirdsLogic
         private bool _hasBeenLaunched = false;
         private bool _isHitSomething = false;
         
-        public event Action Launched;
+        public event Action<ISpawnable> Disappeared;
         
         public Rigidbody2D Rigidbody2D { get; private set; }
         public MonoBehaviour MonoBehaviour => this;
-        public event Action<ISpawnable> Disappeared;
 
         private void Awake()
         {
@@ -50,8 +49,6 @@ namespace Game.Scripts.GameLogic.BirdsLogic
             _hasBeenLaunched = true;
             
             Rigidbody2D.AddForce(direction * force, ForceMode2D.Impulse);
-            
-            Launched?.Invoke();
         }
 
         public void Disappear()

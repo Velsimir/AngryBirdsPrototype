@@ -16,18 +16,11 @@ namespace Game.Scripts.GameLogic.SingShotLogic
         [SerializeField] private Transform _centerOfSingleShotPosition;        
         [SerializeField] private Transform _idlePosition;
         [SerializeField] private float _spawnBirdDelay;
-        [SerializeField] private int _maxShots;
-        
+
         private ISpawnerService<IBird>  _spawnerService;
-        private IBird _currentBird;
         private WaitForSeconds _waitSpawnBirdDelay;
         private Coroutine _spawnBirdCoroutine;
         private int _currentShots;
-
-        private void Awake()
-        {
-            _waitSpawnBirdDelay = new WaitForSeconds(_spawnBirdDelay);
-        }
 
         public void Initialize(InputSystemAction inputSystemAction, ISpawnerService<IBird>  spawnerService)
         {
@@ -36,18 +29,39 @@ namespace Game.Scripts.GameLogic.SingShotLogic
             
             _spawnerService = spawnerService;
 
-            SpawnNewBird();
+            SpawnBird();
         }
 
-        private void SpawnNewBird()
+        public event Action BirdLaunched;
+        
+        [field: SerializeField] public int MaxShots;
+
+        private void Awake()
         {
+            _waitSpawnBirdDelay = new WaitForSeconds(_spawnBirdDelay);
+        }
+
+        private void OnEnable()
+        { 
+            _rubberBand.BirdLaunched += StartSpawnNewBirdCoroutine;
+        }
+
+        private void OnDisable()
+        {
+            _rubberBand.BirdLaunched -= StartSpawnNewBirdCoroutine;
+        }
+
+        private void StartSpawnNewBirdCoroutine()
+        {
+            BirdLaunched?.Invoke();
+            
             if (_spawnBirdCoroutine != null)
             {
                 StopCoroutine(_spawnBirdCoroutine);
                 _spawnBirdCoroutine = null;
             }
 
-            if (_currentShots >= _maxShots)
+            if (_currentShots >= MaxShots)
                 return;
 
             _spawnBirdCoroutine = StartCoroutine(SpawnWithDelay());
@@ -57,12 +71,12 @@ namespace Game.Scripts.GameLogic.SingShotLogic
         {
             yield return _waitSpawnBirdDelay;
 
-            if (_currentBird != null)
-                _currentBird.Launched -= SpawnNewBird;
-            
-            _currentBird = _spawnerService.SpawnAs<IBird>(_idlePosition);
-            _rubberBand.SetNewBird(_currentBird);
-            _currentBird.Launched += SpawnNewBird;
+            SpawnBird();
+        }
+
+        private void SpawnBird()
+        {
+            _rubberBand.SetNewBird(_spawnerService.SpawnAs<IBird>(_idlePosition));
             _currentShots++;
         }
     }
