@@ -13,7 +13,7 @@ namespace Game.Scripts.GameLogic.PigLogic
         
         private float _currentHealth;
         
-        public event Action<ISpawnable> Disappeared;
+        public event Action<IPig> Disappeared;
         
         public MonoBehaviour MonoBehaviour => this;
         public Rigidbody2D RigidBody { get; private set; }

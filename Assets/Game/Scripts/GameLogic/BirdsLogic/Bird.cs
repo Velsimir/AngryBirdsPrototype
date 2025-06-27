@@ -13,7 +13,7 @@ namespace Game.Scripts.GameLogic.BirdsLogic
         private bool _hasBeenLaunched = false;
         private bool _isHitSomething = false;
         
-        public event Action<ISpawnable> Disappeared;
+        public event Action<IBird> Disappeared;
         
         public Rigidbody2D Rigidbody2D { get; private set; }
         public MonoBehaviour MonoBehaviour => this;

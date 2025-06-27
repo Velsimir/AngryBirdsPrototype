@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Scripts.GameLogic.BirdsLogic
 {
-    public interface IBird : ISpawnable
+    public interface IBird : ISpawnable<IBird>
     {
         public Rigidbody2D Rigidbody2D { get; }
         

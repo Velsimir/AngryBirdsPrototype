@@ -4,58 +4,56 @@ using Object = UnityEngine.Object;
 
 namespace Game.Scripts.SpawnerLogic
 {
-    public class SpawnerService<TSpawnableObjet> : ISpawnerService<TSpawnableObjet>
-        where TSpawnableObjet : ISpawnable
+    public class SpawnerService<T> : ISpawnerService<T>
+        where T : ISpawnable<T>
     {
-        private readonly ObjectPoolService<TSpawnableObjet> _pool;
+        private readonly ObjectPoolService _pool;
 
-        public SpawnerService(TSpawnableObjet prefab, Transform container = null)
+        public SpawnerService(T prefab, Transform container = null)
         {
-            _pool = new ObjectPoolService<TSpawnableObjet>(prefab, container);
+            _pool = new ObjectPoolService(prefab, container);
         }
 
-        public TSpawnableObjet Spawn(Vector3 position, Quaternion rotation)
+        public T Spawn(Vector3 position, Quaternion rotation)
         {
-            TSpawnableObjet instance = _pool.Get();
+            T instance = _pool.Get();
             instance.MonoBehaviour.transform.SetPositionAndRotation(position, rotation);
             return instance;
         }
 
         public TInterface SpawnAs<TInterface>(Vector3 position, Quaternion rotation)
-            where TInterface : class, ISpawnable
+            where TInterface : class, ISpawnable<T>
         {
             var instance = Spawn(position, rotation);
             return instance as TInterface;
         }
 
-        public TSpawnableObjet Spawn(Transform spawnPoint)
+        public T Spawn(Transform spawnPoint)
         {
             return Spawn(spawnPoint.position, spawnPoint.rotation);
         }
 
-
         public TInterface SpawnAs<TInterface>(Transform spawnPoint)
-            where TInterface : class, ISpawnable
+            where TInterface : class, ISpawnable<T>
         {
             return SpawnAs<TInterface>(spawnPoint.position, spawnPoint.rotation);
         }
 
-
-        private class ObjectPoolService<TSpawnable> where TSpawnable : ISpawnable
+        private class ObjectPoolService
         {
-            private readonly TSpawnable _prefab;
+            private readonly T _prefab;
             private readonly Transform _container;
-            private readonly List<TSpawnable> _available = new();
+            private readonly List<T> _available = new();
 
-            public ObjectPoolService(TSpawnable prefab, Transform container = null)
+            public ObjectPoolService(T prefab, Transform container = null)
             {
                 _prefab = prefab;
                 _container = container;
             }
 
-            public TSpawnable Get()
+            public T Get()
             {
-                TSpawnable instance;
+                T instance;
 
                 if (_available.Count > 0)
                 {
@@ -72,19 +70,16 @@ namespace Game.Scripts.SpawnerLogic
                 return instance;
             }
 
-            private void ReturnToPool(ISpawnable spawnable)
+            private void ReturnToPool(T instance)
             {
-                if (spawnable is TSpawnable t)
-                {
-                    t.MonoBehaviour.gameObject.SetActive(false);
-                    _available.Add(t);
-                }
+                instance.MonoBehaviour.gameObject.SetActive(false);
+                _available.Add(instance);
             }
-            
-            private TSpawnable InstantiateFromPrefab()
+
+            private T InstantiateFromPrefab()
             {
                 var obj = Object.Instantiate(_prefab.MonoBehaviour, _container);
-                return obj.GetComponent<TSpawnable>();
+                return obj.GetComponent<T>();
             }
         }
     }
