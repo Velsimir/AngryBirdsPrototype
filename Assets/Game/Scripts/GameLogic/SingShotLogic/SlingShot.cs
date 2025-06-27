@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Game.Scripts.GameLogic.BirdsLogic;
+using Game.Scripts.GameLogic.InputLogic;
 using Game.Scripts.GameLogic.SpawnerLogic;
 using UnityEngine;
 
@@ -22,9 +23,9 @@ namespace Game.Scripts.GameLogic.SingShotLogic
         private Coroutine _spawnBirdCoroutine;
         private int _currentShots;
 
-        public void Initialize(InputSystemAction inputSystemAction, ISpawnerService<IBird>  spawnerService)
+        public void Initialize(IInputClickHandlerService inputSystemAction, ISpawnerService<IBird>  spawnerService, Camera camera)
         {
-            _slingShotArea.Initialize(inputSystemAction);
+            _slingShotArea.Initialize(inputSystemAction, camera);
             _rubberBand.Initialize(_leftBranchPosition, _rightBranchPosition, _centerOfSingleShotPosition);
             
             _spawnerService = spawnerService;

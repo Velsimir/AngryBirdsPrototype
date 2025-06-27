@@ -1,63 +1,58 @@
 using System;
+using Game.Scripts.GameLogic.InputLogic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Game.Scripts.GameLogic.SingShotLogic
 {
     [RequireComponent(typeof(CircleCollider2D))]
     public class SlingShotArea : MonoBehaviour
     {
-        [SerializeField] private LayerMask _singShoLayerMask;
-
-        private InputSystemAction _inputSystem;
+        [SerializeField] GameObject _objectToSpawn;
+        private IInputClickHandlerService _inputClickHandler;
+        private Camera _camera;
 
         public event Action InputStarted;
         public event Action InputCanceled;
 
-        public void Initialize(InputSystemAction inputSystemAction)
+        public void Initialize(IInputClickHandlerService inputClickHandler, Camera camera)
         {
-            _inputSystem = inputSystemAction;
-            
-            _inputSystem.Player.Attack.started += CheckMouseInArea;
-            _inputSystem.Player.Attack.canceled += UnClickedMouse;
+            _inputClickHandler = inputClickHandler;
+            _camera = camera;
+            _inputClickHandler = inputClickHandler;
+            _inputClickHandler.ClickPressed += CheckMouseInArea;
+            _inputClickHandler.ClickCanceled += CancelClick;
         }
 
         private void OnEnable()
         {
-            if (_inputSystem == null)
-                return;
-            
-            _inputSystem.Player.Attack.started += CheckMouseInArea;
-            _inputSystem.Player.Attack.canceled += UnClickedMouse;
+            if (_inputClickHandler != null)
+            {
+                _inputClickHandler.ClickPressed += CheckMouseInArea;
+                _inputClickHandler.ClickCanceled += CancelClick;
+            }
         }
-
+        
         private void OnDisable()
         {
-            _inputSystem.Player.Attack.started -= CheckMouseInArea;
-            _inputSystem.Player.Attack.canceled -= UnClickedMouse;
+            if (_inputClickHandler != null)
+            {
+                _inputClickHandler.ClickPressed -= CheckMouseInArea;
+                _inputClickHandler.ClickCanceled -= CancelClick;
+            }
         }
 
-        private void CheckMouseInArea(InputAction.CallbackContext obj)
+        private void CheckMouseInArea(Vector2 mousePosition)
         {
-            Vector2 worldPosition = Vector2.zero;
+            Vector2 worldPoint = _camera.ScreenToWorldPoint(mousePosition);
+            Collider2D hit = Physics2D.OverlapPoint(worldPoint);
 
-            if (Mouse.current.enabled)
-            {
-                worldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            }
-            else if (Touchscreen.current.enabled)
-            {
-                worldPosition = Camera.main.ScreenToWorldPoint(Touchscreen.current.position.ReadValue());
-            }
-
-
-            if (Physics2D.OverlapPoint(worldPosition, _singShoLayerMask))
+            if (hit != null && hit.gameObject == this.gameObject)
             {
                 InputStarted?.Invoke();
             }
         }
 
-        private void UnClickedMouse(InputAction.CallbackContext obj)
+        private void CancelClick()
         {
             InputCanceled?.Invoke();
         }

@@ -1,11 +1,10 @@
 using System;
 using System.Linq;
-using Game.Scripts.Extension;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Game.Scripts
+namespace Game.Scripts.Extension.Editor
 {
     [CustomPropertyDrawer(typeof(RequireInterfaceAttribute))]
     public class RequireInterfaceAttributeDrawer : PropertyDrawer
