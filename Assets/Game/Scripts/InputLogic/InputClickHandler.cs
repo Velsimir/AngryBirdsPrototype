@@ -21,6 +21,8 @@ namespace Game.Scripts.GameLogic.InputLogic
         public event Action<Vector2> ClickPressed;
         public event Action ClickCanceled;
 
+        public Vector2 CurrentMousePosition => _inputSystem.Player.ClickPosition.ReadValue<Vector2>();
+
         private void HandleCanceledClick(InputAction.CallbackContext obj)
         {
             ClickCanceled?.Invoke();

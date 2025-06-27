@@ -1,5 +1,6 @@
 using System;
 using Game.Scripts.GameLogic.BirdsLogic;
+using Game.Scripts.GameLogic.InputLogic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
@@ -25,8 +26,13 @@ namespace Game.Scripts.GameLogic.SingShotLogic
 
         private IBird _currentBird;
 
-        public void Initialize(Transform leftBranchPosition, Transform rightBranchPosition, Transform centerOfSingleShotPosition)
+        private IInputClickHandlerService _clickHandler;
+        private Camera _camera;
+
+        public void Initialize(IInputClickHandlerService clickHandler, Camera camera,Transform leftBranchPosition, Transform rightBranchPosition, Transform centerOfSingleShotPosition)
         {
+            _clickHandler = clickHandler;
+            _camera =  camera;
             _leftBranchPosition = leftBranchPosition;
             _rightBranchPosition = rightBranchPosition;
             _centerOfSingleShotPosition = centerOfSingleShotPosition;
@@ -84,12 +90,7 @@ namespace Game.Scripts.GameLogic.SingShotLogic
 
         private void DrawRubberLines()
         {
-            Vector3 inputPosition = Vector2.zero;
-            
-            if (Mouse.current.enabled)
-                inputPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            else if (Touchscreen.current.enabled)
-                inputPosition = Camera.main.ScreenToWorldPoint(Touchscreen.current.position.ReadValue());
+            Vector3 inputPosition = _camera.ScreenToWorldPoint(_clickHandler.CurrentMousePosition);
             
             _rubberBandLinesPosition = 
                 _centerOfSingleShotPosition.position + Vector3.ClampMagnitude(inputPosition - _centerOfSingleShotPosition.position, _maxRubberBandLenght);

@@ -26,7 +26,7 @@ namespace Game.Scripts.GameLogic.SingShotLogic
         public void Initialize(IInputClickHandlerService inputSystemAction, ISpawnerService<IBird>  spawnerService, Camera camera)
         {
             _slingShotArea.Initialize(inputSystemAction, camera);
-            _rubberBand.Initialize(_leftBranchPosition, _rightBranchPosition, _centerOfSingleShotPosition);
+            _rubberBand.Initialize(inputSystemAction, camera,_leftBranchPosition, _rightBranchPosition, _centerOfSingleShotPosition);
             
             _spawnerService = spawnerService;
 

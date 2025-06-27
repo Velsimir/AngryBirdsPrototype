@@ -29,6 +29,8 @@ namespace Game.Scripts.Bootstraps
             _slingShot.Initialize(_inputClickHandler, _birdSpawnerService, _camera);
             _leftShotsUi.Initialize(_slingShot);
             _winLoseCondition.Initialize(_slingShot, _loseScreen, _winScreen);
+            
+            Application.targetFrameRate = 60;
         }
     }
 }
