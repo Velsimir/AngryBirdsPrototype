@@ -2,6 +2,7 @@ using System;
 using Game.Scripts.GameLogic.BirdsLogic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
 namespace Game.Scripts.GameLogic.SingShotLogic
 {
@@ -36,8 +37,8 @@ namespace Game.Scripts.GameLogic.SingShotLogic
 
         private void OnEnable()
         {
-            _slingShotArea.MouseLeftStarted += Activate;
-            _slingShotArea.MouseLeftCanceled += Deactivate;
+            _slingShotArea.InputStarted += Activate;
+            _slingShotArea.InputCanceled += Deactivate;
         }
 
         private void Update()
@@ -51,8 +52,8 @@ namespace Game.Scripts.GameLogic.SingShotLogic
 
         private void OnDisable()
         {
-            _slingShotArea.MouseLeftStarted -= Activate;
-            _slingShotArea.MouseLeftCanceled -= Deactivate;
+            _slingShotArea.InputStarted -= Activate;
+            _slingShotArea.InputCanceled -= Deactivate;
         }
 
         public void SetNewBird(IBird bird)
@@ -63,6 +64,9 @@ namespace Game.Scripts.GameLogic.SingShotLogic
 
         private void Activate()
         {
+            if (_currentBird == null)
+                return;
+            
             _isClickedWithinArea = true;
         }
 
@@ -73,16 +77,22 @@ namespace Game.Scripts.GameLogic.SingShotLogic
             
             _currentBird.Launch(_direction, 10f);
             BirdLaunched?.Invoke();
+            _currentBird = null;
             _isClickedWithinArea = false;
             DrawLinesToPoint(_centerOfSingleShotPosition.position);
         }
 
         private void DrawRubberLines()
         {
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            Vector3 inputPosition = Vector2.zero;
+            
+            if (Mouse.current.enabled)
+                inputPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            else if (Touchscreen.current.enabled)
+                inputPosition = Camera.main.ScreenToWorldPoint(Touchscreen.current.position.ReadValue());
             
             _rubberBandLinesPosition = 
-                _centerOfSingleShotPosition.position + Vector3.ClampMagnitude(mousePosition - _centerOfSingleShotPosition.position, _maxRubberBandLenght);
+                _centerOfSingleShotPosition.position + Vector3.ClampMagnitude(inputPosition - _centerOfSingleShotPosition.position, _maxRubberBandLenght);
             
             DrawLinesToPoint(_rubberBandLinesPosition);
             _direction = _centerOfSingleShotPosition.position - _currentBird.MonoBehaviour.transform.position;

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Game.Scripts.SpawnerLogic
+namespace Game.Scripts.GameLogic.SpawnerLogic
 {
     public class SpawnerService<T> : ISpawnerService<T>
         where T : ISpawnable<T>

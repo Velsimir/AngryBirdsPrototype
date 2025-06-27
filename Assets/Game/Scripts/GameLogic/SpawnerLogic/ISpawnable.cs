@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Game.Scripts.SpawnerLogic
+namespace Game.Scripts.GameLogic.SpawnerLogic
 {
     public interface ISpawnable<T> where T : ISpawnable<T>
     {

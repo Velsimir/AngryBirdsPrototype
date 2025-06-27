@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using Game.Scripts.GameLogic.BirdsLogic;
-using Game.Scripts.SpawnerLogic;
+using Game.Scripts.GameLogic.SpawnerLogic;
 using UnityEngine;
 
 namespace Game.Scripts.GameLogic.SingShotLogic
@@ -33,6 +33,7 @@ namespace Game.Scripts.GameLogic.SingShotLogic
         }
 
         public event Action BirdLaunched;
+        public event Action LastBirdLaunched;
         
         [field: SerializeField] public int MaxShots;
 
@@ -62,7 +63,11 @@ namespace Game.Scripts.GameLogic.SingShotLogic
             }
 
             if (_currentShots >= MaxShots)
+            {
+                LastBirdLaunched?.Invoke();
                 return;
+            }
+
 
             _spawnBirdCoroutine = StartCoroutine(SpawnWithDelay());
         }

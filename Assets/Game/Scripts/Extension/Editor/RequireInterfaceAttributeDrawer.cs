@@ -1,17 +1,19 @@
 using System;
 using System.Linq;
+using Game.Scripts.Extension;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Game.Scripts.Extension
+namespace Game.Scripts
 {
     [CustomPropertyDrawer(typeof(RequireInterfaceAttribute))]
     public class RequireInterfaceAttributeDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            Type requiredType = ((RequireInterfaceAttribute)attribute).RequiredInterface;
+            RequireInterfaceAttribute requireInterface = (RequireInterfaceAttribute)attribute;
+            Type requiredType = requireInterface.RequiredInterface;
             Object previousValid = GetValidComponent(property.objectReferenceValue, requiredType);
 
             Object picked = EditorGUI.ObjectField(position, label, previousValid, typeof(Object), true);

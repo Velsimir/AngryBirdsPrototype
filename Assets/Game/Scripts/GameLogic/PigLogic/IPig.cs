@@ -1,4 +1,4 @@
-using Game.Scripts.SpawnerLogic;
+using Game.Scripts.GameLogic.SpawnerLogic;
 using UnityEngine;
 
 namespace Game.Scripts.GameLogic.PigLogic

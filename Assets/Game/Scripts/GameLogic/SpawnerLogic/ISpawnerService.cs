@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Scripts.SpawnerLogic
+namespace Game.Scripts.GameLogic.SpawnerLogic
 {
     public interface ISpawnerService<TSpawnableObjet> where TSpawnableObjet : ISpawnable<TSpawnableObjet>
     {

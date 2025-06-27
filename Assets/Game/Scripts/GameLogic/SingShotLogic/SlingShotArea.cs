@@ -11,8 +11,8 @@ namespace Game.Scripts.GameLogic.SingShotLogic
 
         private InputSystemAction _inputSystem;
 
-        public event Action MouseLeftStarted;
-        public event Action MouseLeftCanceled;
+        public event Action InputStarted;
+        public event Action InputCanceled;
 
         public void Initialize(InputSystemAction inputSystemAction)
         {
@@ -39,17 +39,27 @@ namespace Game.Scripts.GameLogic.SingShotLogic
 
         private void CheckMouseInArea(InputAction.CallbackContext obj)
         {
-            Vector2 worldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            Vector2 worldPosition = Vector2.zero;
+
+            if (Mouse.current.enabled)
+            {
+                worldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            }
+            else if (Touchscreen.current.enabled)
+            {
+                worldPosition = Camera.main.ScreenToWorldPoint(Touchscreen.current.position.ReadValue());
+            }
+
 
             if (Physics2D.OverlapPoint(worldPosition, _singShoLayerMask))
             {
-                MouseLeftStarted?.Invoke();
+                InputStarted?.Invoke();
             }
         }
 
         private void UnClickedMouse(InputAction.CallbackContext obj)
         {
-            MouseLeftCanceled?.Invoke();
+            InputCanceled?.Invoke();
         }
     }
 }
