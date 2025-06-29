@@ -9,6 +9,7 @@ namespace Game.Scripts.GameLogic.PigLogic
     {
         [SerializeField] private float _maxHealth = 3;
         [SerializeField] private float _damageTrashHold = 0.2f;
+        [SerializeField] private ParticleSystem _deathEffect;
         
         private float _currentHealth;
         
@@ -48,6 +49,7 @@ namespace Game.Scripts.GameLogic.PigLogic
 
         public void Disappear()
         {
+            Instantiate(_deathEffect, transform.position, Quaternion.identity);
             gameObject.SetActive(false);
             Disappeared?.Invoke(this);
         }

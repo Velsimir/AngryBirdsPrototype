@@ -6,6 +6,7 @@ using Game.Scripts.GameLogic.SpawnerLogic;
 using Game.Scripts.GameLogic.UiLogic;
 using Game.Scripts.GameLogic.WinLoseConditionLogic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game.Scripts.Bootstraps
 {
@@ -31,6 +32,11 @@ namespace Game.Scripts.Bootstraps
             _winLoseCondition.Initialize(_slingShot, _loseScreen, _winScreen);
             
             Application.targetFrameRate = 60;
+        }
+        
+        public void Restart()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }
