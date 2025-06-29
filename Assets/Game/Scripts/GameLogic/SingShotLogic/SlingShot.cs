@@ -52,6 +52,11 @@ namespace Game.Scripts.GameLogic.SingShotLogic
         {
             _rubberBand.BirdLaunched -= StartSpawnNewBirdCoroutine;
         }
+        
+        public void Deactivate()
+        {
+            _rubberBand.enabled = false;
+        }
 
         private void StartSpawnNewBirdCoroutine()
         {

@@ -68,11 +68,13 @@ namespace Game.Scripts.GameLogic.WinLoseConditionLogic
         private void ShowWinScreen()
         {
             _winScreen.SetActive(true);
+            _slingShot.Deactivate();
         }
 
         private void ShowLoseScreen()
         {
             _loseScreen.SetActive(true);
+            _slingShot.Deactivate();
         }
     }
 }
